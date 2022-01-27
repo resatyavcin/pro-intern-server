@@ -1,3 +1,48 @@
+# Pro-Intern
+
+## _Abant Izzet Baysal University Intern Project_
+
+##### Explanation:
+
+On behalf of Abant izzet Baysal University, the name of this project is 'Internship Automation and Process Management'. I will call him 'Pro-Intern' because he facilitates internship management. It is also a graduation project. Thank you for your support.👾
+
+- Faculty friendly
+- Company Friendly
+- Student friendly ✨
+
+## Tech
+
+Pro-Intern uses a number of open source projects to work properly:
+
+- [node.js] - Evented I/O for the backend
+- [Express] - Fast node.js network app framework
+
+And of course Pro-Intern itself is open source with a [public repository]
+on GitHub.
+
+## Installation
+
+Pro-Intern requires [Node.js](https://nodejs.org/) v10+ to run.
+
+Install the dependencies and devDependencies and start the server.
+
+```sh
+cd pro-intern-server
+npm install
+npm start
+```
+
+```sh
+127.0.0.1:8000
+```
+
+For production environments...
+
+```sh
+npm install --production
+NODE_ENV=production node app
+```
+
 ## Student Endpoint
 
 | Query    | User                      | Function                                                                 |
@@ -27,3 +72,7 @@
 | `PUT`    | `/api/intern/:id`                     | It updates the file registered in the system according to the id property.(✅ open to everyone)     |
 | `PUT`    | `/api/intern/sign_it/:id?who=`        | Provides the signing of the existing internship right (⛔️ closed to "student" ⚠️)                  |
 | `DELETE` | `/api/intern/:id`                     | It deletes the file registered in the system according to the id property. (✅ open to everyone)    |
+
+## License
+
+MIT
