@@ -1,0 +1,55 @@
+{
+    "student": [
+        { 
+            "id": 1, 
+            "department_code": "CE",
+            "grade": "3",
+            "student_no": "121212111",
+            "email": "resatyavcin@gmail.com", 
+            "password": "Rr22092000.",
+            "republic_of_turkey_id": "30007688893",
+            "name": "Reşat",
+            "surname": "YAVÇİN",
+            "phone": "+905456766677",
+            "right_of_entry": 3 
+        }
+    ],
+
+    "admin": [
+        { 
+            "id": 1, 
+            "email": "resatyavcin@gmail.com", 
+            "password": "Rr22092000.",
+            "republic_of_turkey_id": "30007688893",
+            "name": "Reşat",
+            "surname": "YAVÇİN",
+            "phone": "+905456766677",
+            "right_of_entry": 3 
+        }
+    ],
+
+    "intern": [
+        { 
+            "id": 1,
+            "student_user_id": 1,
+            "number_of_compulsory_internships": 2,
+            "interns": [
+                {   
+                    "start_intern_date": 220902000,
+                    "finished_intern_date": 220902000,
+                    "weekend": false,
+                    "files": [],
+                    "signed_by_the_dean": {
+                        "user_id": null,
+                        "is_signed": false
+                    },
+                    "signed_by_business":{
+                        "user_id": null,
+                        "is_signed": false
+                    },
+                    "is_complated": false
+                }
+            ]
+        }
+    ]
+}
