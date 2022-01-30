@@ -1,14 +1,31 @@
-const jsonServer = require('json-server')
-const server = jsonServer.create()
-const router = jsonServer.router('db.json')
-const middlewares = jsonServer.defaults()
+//We have added the .env file where we keep the relative environment variables and the path where it is located.
+require('dotenv').config('/.env');
+// We defined the database file and started it as a constructor.
 
-// Set default middlewares (logger, static, cors and no-cache)
-server.use(middlewares)
+const express = require('express');
+const app = express();
+
+const bodyParser = require('body-parser');
+const passport = require('passport');
+
+require("./src/helper/cors")(app);
+require("./src/helper/prod")(app);
+require('./src/helper/db')();
+
+const user_router = require('./src/router/user_router');
+
+//middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 
-// Use default router
-server.use(router)
-server.listen(3000, () => {
-  console.log('JSON Server is running')
-})
+app.use(passport.initialize());
+
+app.use('/api/user', user_router);
+
+// Passport config
+require('./src/middleware/passport')(passport);
+
+app.listen(process.env.PORT, () => {
+  console.log('listening on port: ' + process.env.PORT);
+});
