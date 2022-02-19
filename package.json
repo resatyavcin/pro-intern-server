@@ -4,8 +4,8 @@
   "description": "## _Abant Izzet Baysal University Intern Project_",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/resatyavcin/pro-intern-server#readme",
   "dependencies": {
+    "@emailjs/browser": "^3.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
@@ -28,12 +29,15 @@
     "helmet": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.8",
+    "nodemailer": "^6.7.2",
+    "nodemailer-pug-engine": "^2.0.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
+    "pug": "^3.0.2",
     "ramda": "^0.28.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
-    "prettier": "2.5.1"
+    "prettier": "^2.5.1"
   }
 }

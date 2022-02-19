@@ -45,32 +45,31 @@ const userSchema = new Schema(
     isVerified: {
       type: Boolean,
       required: true,
-      default: false,
+      default: false
     },
     isBlocked: {
       type: Boolean,
       required: true,
-      default: false,
+      default: false
     }
   },
   { timestamps: true }
 );
-
 
 //================= PASSWORD METHODS =====================
 userSchema.methods.passwordHashed = function () {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(this.password, salt);
   this.password = hash;
-}
+};
 
 userSchema.methods.passwordCompare = function (password, hashed_password) {
   const is_match = bcrypt.compareSync(password, hashed_password);
   return is_match;
-}
+};
 
 userSchema.methods.hidePassword = function () {
-  return R.omit(["password", "__v", "_id"], this.toObject({ virtuals: true }));
+  return R.omit(['password', '__v', '_id'], this.toObject({ virtuals: true }));
 };
 
 module.exports = mongoose.model('User', userSchema);

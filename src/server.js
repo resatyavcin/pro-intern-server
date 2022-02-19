@@ -4,27 +4,27 @@ require('dotenv').config('/.env');
 
 const express = require('express');
 const app = express();
-
+const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-require("./src/helper/cors")(app);
-require("./src/helper/prod")(app);
-require('./src/helper/db')();
+require('./config/cors')(app);
+require('./config/prod')(app);
+require('./config/db')();
 
-const user_router = require('./src/router/user_router');
+const user_router = require('./api/routers/user_router');
+
 
 //middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 app.use(passport.initialize());
 
 app.use('/api/user', user_router);
 
 // Passport config
-require('./src/middleware/passport')(passport);
+require('./api/middlewares/passport')(passport);
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port: ' + process.env.PORT);
