@@ -1,0 +1,59 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2021, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module" // Allows for the use of imports
+  },
+  "plugins": ["prettier", "eslint-plugin-prettier"],
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "implicit-arrow-linebreak": "off",
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "*", "next": "return" },
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+      {
+        "blankLine": "any",
+        "prev": ["const", "let", "var"],
+        "next": ["const", "let", "var"]
+      },
+      {
+        "blankLine": "always",
+        "prev": ["const", "let", "var"],
+        "next": ["if", "case"]
+      }
+    ],
+    "no-undef": "off",
+    "no-prototype-builtins": "off",
+    "comma-dangle": ["error", "never"],
+    // "no-alert": ["error"],
+    // "no-debugger": ["error"],
+    // "no-console": ["error"],
+
+    "no-alert": "off",
+    "no-debugger": "off",
+    "no-console": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name=`console`][callee.property.name!=/^(log|warn|error|info|trace)$/]",
+        "message": "Unexpected property on console object was called"
+      }
+    ],
+    "no-case-declarations": "off",
+    "no-irregular-whitespace": ["error", { "skipComments": true, "skipRegExps": true, "skipStrings": true }],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreUrls": true,
+        "ignorePattern": "^import .*",
+        "ignoreComments": true
+      }
+    ],
+    "no-trailing-spaces": "error",
+    "curly": ["error"],
+    "object-curly-spacing": ["error", "always", { "objectsInObjects": true, "arraysInObjects": true }],
+    "arrow-body-style": ["error", "as-needed"],
+    "object-shorthand": ["error", "always"]
+  }
+}

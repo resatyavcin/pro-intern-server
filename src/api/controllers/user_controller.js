@@ -1,9 +1,11 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { sendMailService } = require('../services/mail_services')
-//===================REGISTER ENDOINT=====================
+const { sendMailService } = require('../services/mail_services');
+
+
+// ===================REGISTER ENDOINT=====================
 const register = async (req, res) => {
-  const { email, password, password_confirm } = req.body;
+  const { email, password, passwordConfirm } = req.body;
 
   try {
     const user = await User.findOne({ email: email });
@@ -12,17 +14,17 @@ const register = async (req, res) => {
       return res.send('This email is already exist.');
     }
 
-    if (password !== password_confirm) {
+    if (password !== passwordConfirm) {
       return res.send('Sorry, the passwords you entered do not match.');
     }
 
-    const new_user = new User({ ...req.body });
+    const newUser = new User({ ...req.body });
 
-    new_user.passwordHashed();
+    newUser.passwordHashed();
 
-    const created_user = await User.create(new_user);
+    const createdUser = await User.create(new_user);
 
-    return res.send(created_user.hidePassword());
+    return res.send(createdUser.hidePassword());
   } catch (err) {
     return res.json({
       message: 'Something went wrong.',
@@ -31,7 +33,7 @@ const register = async (req, res) => {
   }
 };
 
-//=================LOGIN ENDOINT=====================
+// =================LOGIN ENDOINT=====================
 const login = async (req, res) => {
   const { email, username, password } = req.body;
 
@@ -62,9 +64,9 @@ const login = async (req, res) => {
         return res.send('Sorry, your account has been locked because you entered it incorrectly 3 times in a row.');
       }
 
-      const remaining_entry = (await user.right_of_entry) - 1;
+      const remainingEntry = (await user.right_of_entry) - 1;
 
-      await User.findOneAndUpdate({ email: user.email }, { right_of_entry: remaining_entry });
+      await User.findOneAndUpdate({ email: user.email }, { right_of_entry: remainingEntry });
 
       return res.send('Sorry, you entered the wrong password');
     }
@@ -76,7 +78,7 @@ const login = async (req, res) => {
   }
 };
 
-//=================LOGIN CURRENT ENDOINT=====================
+// =================LOGIN CURRENT ENDOINT=====================
 const loginCurrent = async (req, res) => {
   return res.send(req.user);
 };
@@ -87,11 +89,12 @@ const usePasswordHashToMakeToken = ({ password: passwordHash, _id: userId, creat
   const token = jwt.sign({ userId }, secret, {
     expiresIn: 3600 // 1 hour
   });
+
   // highlight-end
   return token;
 };
 
-//=================PASSWORD RESET MAIL ENDPOINT=====================
+// =================PASSWORD RESET MAIL ENDPOINT=====================
 const sendPasswordResetEmail = async (req, res) => {
   const { email } = req.params;
 
@@ -110,7 +113,6 @@ const sendPasswordResetEmail = async (req, res) => {
     });
 
     return res.send('We have sent a reset e-mail to your registered e-mail to reset your password.');
-
   } catch (err) {
     return res.json({
       message: 'Something went wrong.',
@@ -119,16 +121,12 @@ const sendPasswordResetEmail = async (req, res) => {
   }
 };
 
-
-
-//=================PASSWORD RESET MAIL ENDPOINT=====================
+// =================PASSWORD RESET MAIL ENDPOINT=====================
 const receiveNewPassword = async (req, res) => {
-
   try {
-    console.log("first");
+    console.log('first');
 
     return res.send('We have sent a reset e-mail to your registered e-mail to reset your password.');
-
   } catch (err) {
     return res.json({
       message: 'Something went wrong.',

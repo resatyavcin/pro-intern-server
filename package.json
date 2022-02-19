@@ -1,12 +1,16 @@
 {
   "name": "pro-intern-server",
   "version": "1.0.0",
-  "description": "## _Abant Izzet Baysal University Intern Project_",
+  "description": "## Abant Izzet Baysal University Intern Project",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky install",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --fix --ext \"**/*.{ts,tsx,js,jsx}\"",
+    "format": "prettier . --write \"**/*.{ts,tsx,js,jsx,json}\"",
+    "fix:all": "npm run format && npm run lint:fix"
   },
   "repository": {
     "type": "git",
@@ -37,6 +41,10 @@
     "ramda": "^0.28.0"
   },
   "devDependencies": {
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
   }
