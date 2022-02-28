@@ -21,11 +21,9 @@ const register = async (req, res) => {
 
     newUser.passwordHashed();
 
-
     const createdUser = await User.create(newUser);
 
     return res.send(createdUser);
-
   } catch (err) {
     return res.json({
       message: 'Something went wrong.',

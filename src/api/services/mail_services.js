@@ -7,10 +7,9 @@ const transporter = nodemailer.createTransport({
   secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
+    pass: process.env.GMAIL_PASS
+  }
 });
-
 
 function configMail(user, token) {
   //const url = `http://localhost:8080/api/user/reset-password/${user._id}/${token}`;
@@ -18,17 +17,15 @@ function configMail(user, token) {
     from: '"Pro-Intern" insupcy@gmail.com',
     to: `${user.email}`,
     subject: '🌻 Backwoods Password Reset 🌻',
-    attachments: [
-      {fileName: 'mail_template.pug', path: '../../../views/mail_template.pug'},
-    ],
+    attachments: [{ fileName: 'mail_template.pug', path: '../../../views/mail_template.pug' }]
   };
 
   return mailOptions;
 }
 
-function sendMailService({user, token}) {
+function sendMailService({ user, token }) {
   // send mail with defined transport object
-  transporter.sendMail(configMail(user, token), function(err, data) {
+  transporter.sendMail(configMail(user, token), function (err, data) {
     if (err) {
       console.log(err);
     } else {
@@ -37,7 +34,6 @@ function sendMailService({user, token}) {
   });
 }
 
-
 module.exports = {
-  sendMailService,
+  sendMailService
 };

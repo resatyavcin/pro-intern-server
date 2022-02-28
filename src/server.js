@@ -23,7 +23,6 @@ const userRouter = require('./api/routers/user_router');
 
 app.use(passport.initialize());
 
-
 app.use('/api/user', userRouter);
 
 // Passport config
