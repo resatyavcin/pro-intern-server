@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "test": "mocha --exit --recursive",
     "prepare": "husky install",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext \"**/*.{ts,tsx,js,jsx}\"",
@@ -16,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/resatyavcin/pro-intern-server.git"
   },
-  "author": "",
+  "author": "resatyavcin",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/resatyavcin/pro-intern-server/issues"
@@ -41,10 +42,14 @@
     "ramda": "^0.28.0"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "chalk": "^5.0.0",
     "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.0",
+    "mocha": "^9.2.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
   }

@@ -56,7 +56,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-// ================= PASSWORD METHODS =====================
+// ================= PASSWORD METHODS =================
 userSchema.methods.passwordHashed = function () {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(this.password, salt);
@@ -70,7 +70,7 @@ userSchema.methods.passwordCompare = function (password, hashed_password) {
   return is_match;
 };
 
-userSchema.methods.hidePassword = function () {
+userSchema.methods.toJSON = function () {
   return R.omit(['password', '__v', '_id'], this.toObject({ virtuals: true }));
 };
 

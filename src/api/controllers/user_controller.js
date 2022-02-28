@@ -2,13 +2,12 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { sendMailService } = require('../services/mail_services');
 
-
 // ===================REGISTER ENDOINT=====================
 const register = async (req, res) => {
   const { email, password, passwordConfirm } = req.body;
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (user) {
       return res.send('This email is already exist.');
@@ -22,9 +21,11 @@ const register = async (req, res) => {
 
     newUser.passwordHashed();
 
-    const createdUser = await User.create(new_user);
 
-    return res.send(createdUser.hidePassword());
+    const createdUser = await User.create(newUser);
+
+    return res.send(createdUser);
+
   } catch (err) {
     return res.json({
       message: 'Something went wrong.',
@@ -39,7 +40,7 @@ const login = async (req, res) => {
 
   try {
     const user = await User.findOne({
-      $or: [{ email: email, username: username }]
+      $or: [{ email, username }]
     });
 
     if (!user) {
@@ -48,7 +49,7 @@ const login = async (req, res) => {
 
     if (user.passwordCompare(password, user.password) && user.right_of_entry !== 0) {
       const token = jwt.sign(
-        user.hidePassword(),
+        user,
         process.env.SECRET_KEY,
         { expiresIn: 60 * 60 * 24 * 60 } // 24 hours
       );
@@ -79,9 +80,7 @@ const login = async (req, res) => {
 };
 
 // =================LOGIN CURRENT ENDOINT=====================
-const loginCurrent = async (req, res) => {
-  return res.send(req.user);
-};
+const loginCurrent = async (req, res) => res.send(req.user);
 
 const usePasswordHashToMakeToken = ({ password: passwordHash, _id: userId, createdAt }) => {
   // highlight-start
@@ -99,7 +98,7 @@ const sendPasswordResetEmail = async (req, res) => {
   const { email } = req.params;
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.send('No user was found according to the email you entered.');
@@ -108,8 +107,8 @@ const sendPasswordResetEmail = async (req, res) => {
     const token = usePasswordHashToMakeToken(user);
 
     sendMailService({
-      user: user,
-      token: token
+      user,
+      token
     });
 
     return res.send('We have sent a reset e-mail to your registered e-mail to reset your password.');
@@ -124,8 +123,6 @@ const sendPasswordResetEmail = async (req, res) => {
 // =================PASSWORD RESET MAIL ENDPOINT=====================
 const receiveNewPassword = async (req, res) => {
   try {
-    console.log('first');
-
     return res.send('We have sent a reset e-mail to your registered e-mail to reset your password.');
   } catch (err) {
     return res.json({

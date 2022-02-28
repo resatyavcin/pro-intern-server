@@ -2,25 +2,27 @@
   We have added the .env file where we keep the
   relative environment variables and the path where it is located.
 */
-require('dotenv').config('/.env');
+require('dotenv').config('../.env');
 // We defined the database file and started it as a constructor.
 
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
-const passport = require('passport');
 
 require('./config/cors')(app);
 require('./config/prod')(app);
 require('./config/db')();
 
-const userRouter = require('./api/routers/user_router');
+const bodyParser = require('body-parser');
+const passport = require('passport');
 
 // middleware
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const userRouter = require('./api/routers/user_router');
 
 app.use(passport.initialize());
+
 
 app.use('/api/user', userRouter);
 
