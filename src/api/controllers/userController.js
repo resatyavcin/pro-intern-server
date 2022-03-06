@@ -1,10 +1,11 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { sendMailService } = require('../services/mail_services');
+const { sendMailService } = require('../services/mailServices');
+
 
 // ===================REGISTER ENDOINT=====================
 const register = async (req, res) => {
-  const { email, password, passwordConfirm } = req.body;
+  const { email } = req.body;
 
   try {
     const user = await User.findOne({ email });
@@ -13,15 +14,12 @@ const register = async (req, res) => {
       return res.send('This email is already exist.');
     }
 
-    if (password !== passwordConfirm) {
-      return res.send('Sorry, the passwords you entered do not match.');
-    }
-
     const newUser = new User({ ...req.body });
 
-    newUser.passwordHashed();
+    await newUser.passwordHashed();
 
     const createdUser = await User.create(newUser);
+
 
     return res.send(createdUser);
   } catch (err) {
@@ -34,28 +32,36 @@ const register = async (req, res) => {
 
 // =================LOGIN ENDOINT=====================
 const login = async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({
-      $or: [{ email, username }]
-    });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.send('No user was found according to the email you entered.');
     }
 
+    const activateTemplate = (string) => `Activate Token: <a href="${string}">Activate</a>`
+
     if (user.passwordCompare(password, user.password) && user.right_of_entry !== 0) {
+
       const token = jwt.sign(
-        user,
-        process.env.SECRET_KEY,
-        { expiresIn: 60 * 60 * 24 * 60 } // 24 hours
-      );
+          { user },
+          process.env.SECRET_KEY,
+          { expiresIn: 60 * 60 * 24 * 60 }); // 24 hours
+
+      if(process.env.NODE_ENV === 'development'){
+        sendMailService(user, activateTemplate(process.env.DEV_HOST));
+      }else if(process.env.NODE_ENV === 'development'){
+        sendMailService(user, activateTemplate(process.env.PROD_HOST));
+      }
+
 
       return res.send({
         message: 'Succesfully login',
         token: 'Bearer ' + token
       });
+
     } else {
       if (user.right_of_entry === 0) {
         await User.findOneAndUpdate({ email: user.email }, { isBlocked: true });
@@ -77,8 +83,15 @@ const login = async (req, res) => {
   }
 };
 
-// =================LOGIN CURRENT ENDOINT=====================
-const loginCurrent = async (req, res) => res.send(req.user);
+
+// =================ACTIVATE ACCOUNT ENDOINT=====================
+const activateAccount = async (req, res) => {
+
+}
+
+
+
+
 
 const usePasswordHashToMakeToken = ({ password: passwordHash, _id: userId, createdAt }) => {
   // highlight-start
@@ -133,7 +146,7 @@ const receiveNewPassword = async (req, res) => {
 module.exports = {
   register,
   login,
-  loginCurrent,
+  activateAccount,
   sendPasswordResetEmail,
   receiveNewPassword
 };

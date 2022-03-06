@@ -8,7 +8,7 @@ const userSchema = new Schema(
   {
     role: {
       type: String,
-      enum: ['Admin', 'Student'],
+      enum: ['admin', 'student'],
       required: true
     },
     email: {
@@ -71,7 +71,7 @@ userSchema.methods.passwordCompare = function (password, hashed_password) {
 };
 
 userSchema.methods.toJSON = function () {
-  return R.omit(['password', '__v', '_id'], this.toObject({ virtuals: true }));
+  return R.omit(['password', '__v'], this.toObject({ virtuals: true }));
 };
 
 module.exports = mongoose.model('User', userSchema);

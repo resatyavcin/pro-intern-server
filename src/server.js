@@ -15,18 +15,21 @@ require('./config/db')();
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-// middleware
+// Passport config
+require('./api/middlewares/passport')(passport);
+
+// Routers
+const userRouter = require('./api/routers/userRouter');
+
+// Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const userRouter = require('./api/routers/user_router');
-
+// Use Middlewares
 app.use(passport.initialize());
 
-app.use('/api/user', userRouter);
-
-// Passport config
-require('./api/middlewares/passport')(passport);
+// Use Routes
+app.use('/api/auth', userRouter);
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port: ' + process.env.PORT);

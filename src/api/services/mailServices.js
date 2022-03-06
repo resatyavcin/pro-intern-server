@@ -11,21 +11,22 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-function configMail(user, token) {
-  //const url = `http://localhost:8080/api/user/reset-password/${user._id}/${token}`;
+
+
+function configMail(user, template) {
   const mailOptions = {
     from: '"Pro-Intern" insupcy@gmail.com',
     to: `${user.email}`,
     subject: '🌻 Backwoods Password Reset 🌻',
-    attachments: [{ fileName: 'mail_template.pug', path: '../../../views/mail_template.pug' }]
+    text: 'Hey, There!',
+    html: template
   };
 
   return mailOptions;
 }
 
-function sendMailService({ user, token }) {
-  // send mail with defined transport object
-  transporter.sendMail(configMail(user, token), function (err, data) {
+async function sendMailService(user, template) {
+  transporter.sendMail(configMail(user, template), function (err, data) {
     if (err) {
       console.log(err);
     } else {

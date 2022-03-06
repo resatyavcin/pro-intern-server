@@ -16,7 +16,7 @@ module.exports = (passport) => {
           return done(err, false);
         }
         if (user) {
-          return done(null, user.hidePassword());
+          return done(null, user);
         } else {
           return done(null, false);
           // or you could create a new account
