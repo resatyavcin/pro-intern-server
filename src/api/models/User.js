@@ -1,77 +1,71 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const bcrypt = require('bcryptjs');
-const R = require('ramda');
-
 const userSchema = new Schema(
-  {
-    role: {
-      type: String,
-      enum: ['admin', 'student'],
-      required: true
+    {
+        role: {
+            type: String,
+            enum: ['admin', 'student'],
+            required: true
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        password: {
+            type: String,
+            required: true
+        },
+        republic_of_turkey_id: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        phone: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        department_code: {
+            type: String,
+            enum: ['ME', 'EE', 'CE', 'FE'],
+            optional: true
+        },
+        grade: {
+            type: Number,
+            optional: true
+        },
+        right_of_entry: {
+            type: Number,
+            default: 3
+        },
+        isVerified: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        isBlocked: {
+            type: Boolean,
+            required: true,
+            default: false
+        }
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    republic_of_turkey_id: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    phone: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    department_code: {
-      type: String,
-      optional: true
-    },
-    grade: {
-      type: String,
-      optional: true
-    },
-    right_of_entry: {
-      type: Number,
-      default: 3
-    },
-    isVerified: {
-      type: Boolean,
-      required: true,
-      default: false
-    },
-    isBlocked: {
-      type: Boolean,
-      required: true,
-      default: false
-    }
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
-// ================= PASSWORD METHODS =================
-userSchema.methods.passwordHashed = function () {
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(this.password, salt);
 
-  this.password = hash;
-};
+userSchema.methods.publicUserInfo = function () {
+    const user = this;
 
-userSchema.methods.passwordCompare = function (password, hashed_password) {
-  const is_match = bcrypt.compareSync(password, hashed_password);
+    const userToObject = user.toObject();
 
-  return is_match;
-};
+    delete userToObject.password;
 
-userSchema.methods.toJSON = function () {
-  return R.omit(['password', '__v'], this.toObject({ virtuals: true }));
-};
+    return userToObject;
+}
 
-module.exports = mongoose.model('User', userSchema);
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

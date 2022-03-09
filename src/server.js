@@ -8,9 +8,9 @@ require('dotenv').config('../.env');
 const express = require('express');
 const app = express();
 
-require('./config/cors')(app);
-require('./config/prod')(app);
-require('./config/db')();
+require('../config/cors')(app);
+require('../config/prod')(app);
+require('../config/db')();
 
 const bodyParser = require('body-parser');
 const passport = require('passport');

@@ -25,6 +25,7 @@
   "homepage": "https://github.com/resatyavcin/pro-intern-server#readme",
   "dependencies": {
     "@emailjs/browser": "^3.4.0",
+    "@types/node": "^17.0.21",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
@@ -39,7 +40,9 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pug": "^3.0.2",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "validation": "0.0.1",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "chai": "^4.3.6",
