@@ -67,5 +67,4 @@ NODE_ENV=production node app
 | `DELETE` | `/api/intern/:id`                  | It deletes the file registered in the system according to the id property. (✅ open to everyone) |
 
 ## License
-
 MIT
