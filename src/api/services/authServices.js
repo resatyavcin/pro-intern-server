@@ -1,28 +1,61 @@
 //import Models
 const User = require('../models/User');
 
+//import Utils
+const { isAccountBlock } = require('../utils/isAccountBlock')
+
+//import Packages
+const jwt = require('jsonwebtoken');
+
+
+//It is a function for attracting users.
 const fetchUser = (email) => {
-  const user = User.findOne({ email });
+    const user = User.findOne({ email });
 
-  return user;
+    if (!user) {
+        throw 'There is no such user';
+    }
+
+    return user;
 };
 
-const accountBlock = async (user) => {
-  await User.findOneAndUpdate({ email: user.email }, { isBlocked: true });
-};
 
-const reduceTheRightOfEntry = async (user) => {
-  if (user.right_of_entry !== 0) {
-    const decreased = (await user.right_of_entry) - 1;
+const generateToken = async (user) => {
 
-    user = await { ...user, remainingEntry: decreased };
+    const token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY);
+
+    user.tokens = user.tokens.concat({ token });
 
     await user.save();
-  }
+
+    return token;
+}
+
+
+//It is a function that reduces the account entry right by one.
+const reduceTheRightOfEntry = async (user) => {
+
+    if (await isAccountBlock(user)) {
+        throw 'Your account is locked'
+    }
+
+    if (user.right_of_entry !== 0) {
+        const decreased = await user.right_of_entry - 1;
+
+        await User.findOneAndUpdate({ id: user.id }, { right_of_entry: decreased });
+
+    } else if (user.right_of_entry === 0) {
+        accountBlock(user);
+    }
+
 };
 
+//It is a function that blocks the account.
+const accountBlock = async (user) => {
+    await User.findOneAndUpdate({ email: user.email }, { isBlocked: true });
+};
+
+
 module.exports = {
-  fetchUser,
-  accountBlock,
-  reduceTheRightOfEntry
+    fetchUser, generateToken, accountBlock, reduceTheRightOfEntry
 };
