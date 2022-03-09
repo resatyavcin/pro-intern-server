@@ -11,35 +11,32 @@ const { fetchUser } = require('../services/authServices');
 //const { sendMailService } = require('../services/mailServices');
 
 //import Utils
-const { isExistEmail } = require("../utils/isExist");
-const { passwordHashFunction } = require("../utils/hash");
+const { isExistEmail } = require('../utils/isExist');
+const { passwordHashFunction } = require('../utils/hash');
 
 // ===================REGISTER ENDOINT=====================
 const register = async (req, res) => {
-    const { email, phone, password } = req.body;
+  const { email, phone, password } = req.body;
 
-    try {
-        await validationRegister(email, phone);
-        await isExistEmail(email, { returnType: 'Error' });
+  try {
+    await validationRegister(email, phone);
+    await isExistEmail(email, { returnType: 'Error' });
 
-        const newPassword = await passwordHashFunction(password);
-        const newUser = new User({ ...req.body, password: newPassword });
+    const newPassword = await passwordHashFunction(password);
+    const newUser = new User({ ...req.body, password: newPassword });
 
-        await newUser.save();
+    await newUser.save();
 
-        return res.status(201).send(newUser)
-
-    } catch (err) {
-        return res.status(500).send(err);
-    }
+    return res.status(201).send(newUser);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 };
-
 
 // ===================LOGIN ENDOINT=======================
-const login = async (req, res) => {
-};
-
+const login = async (req, res) => {};
 
 module.exports = {
-    register, login
+  register,
+  login
 };
