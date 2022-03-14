@@ -51,13 +51,17 @@ const login = async (req, res) => {
 
         const token = await generateToken(user);
 
-        return res.status(200).send('Bearer ' + token);
+        return res.status(200).send({ token });
     } catch (err) {
         return res.status(500).send(err)
     }
 
 };
 
+const readProfile = async (req, res)=>{
+    res.send('Merhaba')
+}
+
 module.exports = {
-    register, login
+    register, login, readProfile
 };
