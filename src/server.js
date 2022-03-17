@@ -17,6 +17,7 @@ const passport = require('passport');
 
 // Routers
 const authRouter = require('./api/routers/authRouter');
+const userRouter = require('./api/routers/userRouter');
 
 // Middlewares
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ app.use(passport.initialize());
 
 // Use Routes
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port: ' + process.env.PORT);

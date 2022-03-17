@@ -1,52 +1,20 @@
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student');
-const Admin = require('../models/Admin');
-
+const User = require('../models/User');
 
 const verifyAccount = async (req, res, next) => {
+  const token = req.params.token;
 
-    const token = req.params.token;
+  const decoded = jwt.verify(token, process.env.VERIFY_ACCOUNT_KEY);
 
-    try {
-        const decoded = await jwt.verify(token, process.env.VERIFY_ACCOUNT_KEY);
+  const decodedUser = decoded.user;
+  const user = await User.findOne({ email: decodedUser.email });
 
-        const decodedUser = await decoded.user;
+  if (!user) {
+    return res.status(500).send();
+  }
 
-
-        if (decodedUser.role === 'admin') {
-
-            const user = await Admin.findOne({ email: decodedUser.email });
-
-            if (!user) {
-                throw new Error();
-            }
-
-            req.user = { ...user.toObject(), role: decodedUser.role };
-
-            next();
-
-        }
-
-        if (decodedUser.role === 'student') {
-
-            const user = await Student.findOne({ email: decodedUser.email });
-
-            if (!user) {
-                throw new Error();
-            }
-
-            req.user = { ...user.toObject(), role: decodedUser.role };
-
-            next();
-
-        }
-
-
-    } catch (err) {
-        res.status(401).send("Please verify account");
-    }
-
-
-}
+  req.user = user;
+  next();
+};
 
 module.exports = verifyAccount;

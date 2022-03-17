@@ -1,22 +1,10 @@
 //import Models
-const Student = require('../models/Student');
-const Admin = require('../models/Admin');
+const User = require('../models/User');
 
-const isAccountBlock = async (role, user) => {
+const isAccountBlock = async (user) => {
+  const fetchedUser = await User.findOne({ email: user.email }, 'isBlocked');
 
-    let fetchedUser;
-
-    if (role === 'admin') {
-        fetchedUser = await Admin.findOne({ email: user.email });
-    }
-    if (role === 'student') {
-        fetchedUser = await Student.findOne({ email: user.email });
-
-    }
-
-    const isBlock = fetchedUser.isBlocked;
-
-    return isBlock;
+  return fetchedUser.isBlocked;
 };
 
 module.exports = { isAccountBlock };
