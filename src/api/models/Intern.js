@@ -17,53 +17,53 @@ const internSchema = new Schema(
       default: 'STS-1'
     },
     companyInfo: {
-      name: {
+      companyName: {
         type: String,
         required: true
       },
-      address: {
+      companyAddress: {
         type: String,
         required: true
       },
-      phone: {
+      companyPhone: {
         type: String,
         required: true
       },
-      fax: {
+      companyFax: {
         type: String,
         required: true
       },
-      email: {
+      companyEmail: {
         type: String,
         required: true
       },
-      activity: {
+      companyActivity: {
         type: String,
         required: true
       },
-      totalEmployee: {
+      companyTotalEmployee: {
         type: Number,
         required: true
       }
     },
     authorizedPersonName: {
-      fullName: {
+      personFullName: {
         type: String,
         required: true
       },
-      phone: {
+      personPhone: {
         type: String,
         required: true
       },
-      email: {
+      personEmail: {
         type: String,
         required: true
       },
-      jobTitle: {
+      personJobTitle: {
         type: String,
         required: true
       },
-      taskArea: {
+      personTaskArea: {
         type: String,
         required: true
       }

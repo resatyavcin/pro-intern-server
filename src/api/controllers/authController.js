@@ -20,24 +20,24 @@ const register = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const newPassword = await passwordHashFunction(password);
-    const newUser = { ...req.body, password: newPassword };
-
     const isExist = await User.findOne({ email });
 
     if (isExist) {
       return res.status(500).send('RESPONSE.ALREADY_EXIST');
     }
 
+    const newPassword = await passwordHashFunction(password);
+    const newUser = new User({ ...req.body, password: newPassword });
+
     const token = await generateVerifyToken({ ...req.body });
+
+    await newUser.save();
 
     await sendMailService(
       newUser,
       '🚀 Pro-Intern E-posta Doğrulama',
       `<a>${process.env.DEV_HOST}/auth/activate?token=${token}</a>`
     );
-
-    await User.create(newUser);
 
     return res.status(201).send('RESPONSE.SUCCESS');
   } catch (err) {

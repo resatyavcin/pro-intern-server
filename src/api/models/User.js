@@ -24,7 +24,7 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    republic_of_turkey_id: {
+    republicOfTurkeyId: {
       type: String,
       required: true,
       unique: true
@@ -34,7 +34,7 @@ const userSchema = new Schema(
       required: true,
       unique: true
     },
-    department_code: {
+    departmentCode: {
       type: String,
       enum: ['ME', 'EE', 'CE', 'FE']
     },
@@ -68,38 +68,26 @@ const userSchema = new Schema(
       }
     ],
     remainingIntern: {
-      type: Number,
-      optional: true,
-      default(value) {
-        if (this.role === 'STUDENT') {
-          value = 2;
-        }
-      }
+      type: Number
     },
     internFileContentFields: {
       address: {
-        type: String,
-        optional: true
+        type: String
       },
       homePhone: {
-        type: String,
-        optional: true
+        type: String
       },
       dadFullName: {
-        type: String,
-        optional: true
+        type: String
       },
       momFullName: {
-        type: String,
-        optional: true
+        type: String
       },
       placeOfBird: {
-        type: String,
-        optional: true
+        type: String
       },
       placeOfDate: {
-        type: String,
-        optional: true
+        type: String
       }
     },
     tokens: [
@@ -113,6 +101,13 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre('save', function (next) {
+  if (this.role === 'STUDENT') {
+    this.remainingIntern = 2;
+  }
+  next();
+});
 
 userSchema.methods.toJSON = function () {
   const user = this;
