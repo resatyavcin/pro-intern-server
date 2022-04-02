@@ -8,9 +8,9 @@ const passport = require('passport');
 const verifyAccount = require('../middlewares/verifyAccount');
 
 router.post('/register', register);
-router.get('/login', login);
+router.post('/login', login);
 
-router.patch('/activate/:token', verifyAccount, activateAccount);
+router.patch('/activate', verifyAccount, activateAccount);
 
 router.get('/me', passport.authenticate('jwt', { session: false }), profile);
 

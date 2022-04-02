@@ -1,7 +1,5 @@
 const User = require('../models/User');
-
-//import Validation Files
-//const {validationRegister} = require('../validation/authValidation');
+const Intern = require('../models/Intern');
 
 //import Services
 const {
@@ -28,7 +26,7 @@ const register = async (req, res) => {
     const isExist = await User.findOne({ email });
 
     if (isExist) {
-      return res.status(500).send('Such a user is already registered.');
+      return res.status(500).send('RESPONSE.ALREADY_EXIST');
     }
 
     const token = await generateVerifyToken({ ...req.body });
@@ -36,12 +34,12 @@ const register = async (req, res) => {
     await sendMailService(
       newUser,
       '🚀 Pro-Intern E-posta Doğrulama',
-      `<a>${process.env.DEV_HOST}/activate/${token}</a>`
+      `<a>${process.env.DEV_HOST}/auth/activate?token=${token}</a>`
     );
 
     await User.create(newUser);
 
-    return res.status(201).send(newUser);
+    return res.status(201).send('RESPONSE.SUCCESS');
   } catch (err) {
     return res.status(500).send(err);
   }
@@ -55,13 +53,13 @@ const login = async (req, res) => {
     const user = await fetchUser(email);
 
     if (!user.isVerified) {
-      return res.status(500).send('Please verify your account.');
+      return res.status(500).send('RESPONSE.USER_NOT_FOUND');
     }
 
     if (!(await passwordCompare(password, user.password))) {
       await decreaseTheRightOfEntry(user);
 
-      return res.status(500).send('Your password or email address is incorrect. Please try again.');
+      return res.status(500).send('RESPONSE.USER_OR_PASS_WRONG');
     }
 
     const token = await generateLoginToken(user);
@@ -84,7 +82,15 @@ const activateAccount = async (req, res) => {
 };
 
 // =====================PROFILE ENDOINT====================
-const profile = async (req, res) => res.status(200).send(req.user);
+const profile = async (req, res) => {
+  try {
+    const data = await User.findOne({ id: req.user._id }).populate('interns');
+
+    return res.status(200).send(data);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+};
 
 module.exports = {
   register,

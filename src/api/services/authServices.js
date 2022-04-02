@@ -14,7 +14,7 @@ const fetchUser = async (email) => {
   user = await User.findOne({ email });
 
   if (!user) {
-    throw 'There is no such user';
+    throw 'RESPONSE.USER_NOT_FOUND';
   }
 
   return user;
@@ -39,15 +39,15 @@ const generateVerifyToken = async (body) => {
 //It is a function that reduces the account entry right by one.
 const decreaseTheRightOfEntry = async (user) => {
   if (await isAccountBlock(user)) {
-    throw 'Your account is locked';
+    throw 'RESPONSE.BLOCK_ACCOUNT';
   }
 
-  if (user.right_of_entry === 1) {
+  if (user.rightOfEntry === 1) {
     await accountBlock(user);
   }
 
-  if (user.right_of_entry !== 0) {
-    await User.findOneAndUpdate({ id: user.id }, { $inc: { right_of_entry: -1 } });
+  if (user.rightOfEntry !== 0) {
+    await User.findOneAndUpdate({ id: user.id }, { $inc: { rightOfEntry: -1 } });
   }
 };
 

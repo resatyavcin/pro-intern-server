@@ -17,20 +17,23 @@ const passport = require('passport');
 
 // Routers
 const authRouter = require('./api/routers/authRouter');
-const userRouter = require('./api/routers/userRouter');
+const studentRouter = require('./api/routers/studentRouter');
+const internRouter = require('./api/routers/internRouter');
 
 // Middlewares
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const permission = require('../src/api/middlewares/permission');
 
 // Passport config
 require('./api/middlewares/passport')(passport);
 // Use Middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 // Use Routes
 app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
+app.use('/api/student', passport.authenticate('jwt', { session: false }), permission(['ADMIN']), studentRouter);
+app.use('/api/intern', passport.authenticate('jwt', { session: false }), internRouter);
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port: ' + process.env.PORT);

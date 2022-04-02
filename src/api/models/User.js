@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const validator = require('validator');
+
 const userSchema = new Schema(
   {
     role: {
@@ -11,7 +13,12 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error('VALIDATION.EMAIL_ERROR');
+        }
+      }
     },
     password: {
       type: String,
@@ -34,7 +41,7 @@ const userSchema = new Schema(
     grade: {
       type: Number
     },
-    right_of_entry: {
+    rightOfEntry: {
       type: Number,
       required: true,
       default: 3
@@ -48,6 +55,52 @@ const userSchema = new Schema(
       type: Boolean,
       required: true,
       default: false
+    },
+    isTrash: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    interns: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Intern'
+      }
+    ],
+    remainingIntern: {
+      type: Number,
+      optional: true,
+      default(value) {
+        if (this.role === 'STUDENT') {
+          value = 2;
+        }
+      }
+    },
+    internFileContentFields: {
+      address: {
+        type: String,
+        optional: true
+      },
+      homePhone: {
+        type: String,
+        optional: true
+      },
+      dadFullName: {
+        type: String,
+        optional: true
+      },
+      momFullName: {
+        type: String,
+        optional: true
+      },
+      placeOfBird: {
+        type: String,
+        optional: true
+      },
+      placeOfDate: {
+        type: String,
+        optional: true
+      }
     },
     tokens: [
       {
