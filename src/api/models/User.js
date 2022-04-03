@@ -61,34 +61,13 @@ const userSchema = new Schema(
       required: true,
       default: false
     },
-    interns: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Intern'
-      }
-    ],
+    interns: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Intern',
+      default: undefined
+    },
     remainingIntern: {
       type: Number
-    },
-    internFileContentFields: {
-      address: {
-        type: String
-      },
-      homePhone: {
-        type: String
-      },
-      dadFullName: {
-        type: String
-      },
-      momFullName: {
-        type: String
-      },
-      placeOfBird: {
-        type: String
-      },
-      placeOfDate: {
-        type: String
-      }
     },
     tokens: [
       {

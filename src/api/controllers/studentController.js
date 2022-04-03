@@ -1,5 +1,12 @@
+//import Models
 const User = require('../models/User');
 
+/* ----------------------------------------------------------- */
+//ENDPOINTS
+/* ----------------------------------------------------------- */
+
+//Endpoints to be made by the admin
+//Create new student
 const createStudent = async (req, res) => {
   const body = req.body;
 
@@ -13,7 +20,10 @@ const createStudent = async (req, res) => {
     res.sattus(500).send('FAILED');
   }
 };
-const findByIdStudent = async (req, res) => {
+
+//Endpoints to be made by the admin
+//Returns student information by id
+const fetchStudent = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -24,7 +34,10 @@ const findByIdStudent = async (req, res) => {
     res.sattus(500).send('FAILED');
   }
 };
-const findAllStudents = async (req, res) => {
+
+//Endpoints to be made by the admin
+//Returns all students information
+const fetchAllStudents = async (req, res) => {
   try {
     const students = User.find({});
 
@@ -33,9 +46,14 @@ const findAllStudents = async (req, res) => {
     res.sattus(500).send('FAILED');
   }
 };
+
+//Endpoints to be made by the admin
+//Purpose not set
 const updateStudent = async (req, res) => {
   res.status(200).send('OK');
 };
+
+//Endpoints to be made by the admin
 const deleteStudent = async (req, res) => {
   const id = req.params.id;
 
@@ -47,14 +65,17 @@ const deleteStudent = async (req, res) => {
     res.sattus(500).send('FAILED');
   }
 };
+
+//Endpoints to be made by the admin
+//Purpose not set
 const deleteSelectedStudents = (req, res) => {
   res.status(200).send('OK');
 };
 
 module.exports = {
   createStudent,
-  findByIdStudent,
-  findAllStudents,
+  fetchStudent,
+  fetchAllStudents,
   updateStudent,
   deleteStudent,
   deleteSelectedStudents

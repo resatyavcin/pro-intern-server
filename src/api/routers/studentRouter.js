@@ -3,16 +3,16 @@ const router = express.Router();
 
 const {
   createStudent,
-  findAllStudents,
-  findByIdStudent,
+  fetchAllStudents,
+  fetchStudent,
   updateStudent,
   deleteStudent,
   deleteSelectedStudents
 } = require('../controllers/studentController');
 
 router.post('/create', createStudent);
-router.get('/find-all', findAllStudents);
-router.get('/find/:id', findByIdStudent);
+router.get('/find-all', fetchAllStudents);
+router.get('/find/:id', fetchStudent);
 router.patch('/update/:id', updateStudent);
 router.delete('/delete/:id', deleteStudent);
 router.delete('/delete-selected', deleteSelectedStudents);

@@ -1,5 +1,5 @@
+//import Models
 const User = require('../models/User');
-const Intern = require('../models/Intern');
 
 //import Services
 const {
@@ -9,13 +9,17 @@ const {
   decreaseTheRightOfEntry,
   verifiyAccount
 } = require('../services/authServices');
-
 const { sendMailService } = require('../services/mailServices');
 
 //import Utils
 const { passwordHashFunction, passwordCompare } = require('../utils/hash');
 
-// =====================REGISTER ENDOINT===================
+/* ----------------------------------------------------------- */
+//ENDPOINTS
+/* ----------------------------------------------------------- */
+
+//Endpoints to be made by the everybody
+//User registers
 const register = async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,7 +49,8 @@ const register = async (req, res) => {
   }
 };
 
-// =====================LOGIN ENDOINT======================
+//Endpoints to be made by the everybody
+//User login
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -70,7 +75,8 @@ const login = async (req, res) => {
   }
 };
 
-// =====================ACTIVATE ACCOUNT ENDOINT===========
+//Endpoints to be made by the everybody
+//User activate account
 const activateAccount = async (req, res) => {
   try {
     await verifiyAccount(req.user);
@@ -81,7 +87,8 @@ const activateAccount = async (req, res) => {
   }
 };
 
-// =====================PROFILE ENDOINT====================
+//Endpoints to be made by the everybody
+//User visits your profile
 const profile = async (req, res) => {
   try {
     const data = await User.findOne({ id: req.user._id }).populate('interns');
