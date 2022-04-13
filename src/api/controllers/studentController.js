@@ -7,6 +7,7 @@ const User = require('../models/User');
 
 //Endpoints to be made by the admin
 //Create new student
+//PROCESSING
 const createStudent = async (req, res) => {
   const body = req.body;
 
@@ -23,6 +24,7 @@ const createStudent = async (req, res) => {
 
 //Endpoints to be made by the admin
 //Returns student information by id
+//PROCESSING
 const fetchStudent = async (req, res) => {
   const id = req.params.id;
 
@@ -37,39 +39,84 @@ const fetchStudent = async (req, res) => {
 
 //Endpoints to be made by the admin
 //Returns all students information
+//OK
 const fetchAllStudents = async (req, res) => {
   try {
-    const students = User.find({});
+    const students = await User.find({ role: 'STUDENT' });
 
     res.status(200).send(students);
   } catch (err) {
-    res.sattus(500).send('FAILED');
+    res.status(500).send('FAILED');
   }
 };
 
 //Endpoints to be made by the admin
 //Purpose not set
+//PROCESSING
 const updateStudent = async (req, res) => {
   res.status(200).send('OK');
 };
 
 //Endpoints to be made by the admin
-const deleteStudent = async (req, res) => {
-  const id = req.params.id;
+//OK
+const deleteStudentPermanently = async (req, res) => {
+  const { selectedStudents } = req.body;
+
+  let deleted = [];
+  let rejectDeleted = [];
 
   try {
-    User.findOneAndDelete({ id });
+    for (let i = 0; i < selectedStudents.length; i++) {
+      const nextStudent = await User.findOne({ _id: selectedStudents[i] });
 
-    res.status(200).send('Success deleted');
+      if (nextStudent.isTrash) {
+        await User.findOneAndDelete({ _id: selectedStudents[i] });
+        deleted.push(nextStudent);
+      } else {
+        rejectDeleted.push(nextStudent);
+      }
+    }
+
+    return res.status(200).send({
+      deleted,
+      rejectDeleted
+    });
   } catch (err) {
-    res.sattus(500).send('FAILED');
+    return res.status(500).send('FAILED');
   }
 };
 
 //Endpoints to be made by the admin
-//Purpose not set
-const deleteSelectedStudents = (req, res) => {
-  res.status(200).send('OK');
+//OK
+const moveToTrash = async (req, res) => {
+  const { selectedStudents } = req.body;
+
+  let deleted = [];
+  let rejectDeleted = [];
+
+  try {
+    for (let i = 0; i < selectedStudents.length; i++) {
+      console.log(selectedStudents[i]);
+
+      const nextStudent = await User.findOne({ _id: selectedStudents[i] });
+
+      console.log(nextStudent);
+      if (!nextStudent.isTrash) {
+        nextStudent.isTrash = true;
+        nextStudent.save();
+        deleted.push(nextStudent);
+      } else {
+        rejectDeleted.push(nextStudent);
+      }
+    }
+
+    return res.status(200).send({
+      deleted,
+      rejectDeleted
+    });
+  } catch (err) {
+    return res.status(500).send('FAILED');
+  }
 };
 
 module.exports = {
@@ -77,6 +124,6 @@ module.exports = {
   fetchStudent,
   fetchAllStudents,
   updateStudent,
-  deleteStudent,
-  deleteSelectedStudents
+  deleteStudentPermanently,
+  moveToTrash
 };

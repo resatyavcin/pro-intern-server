@@ -21,7 +21,7 @@ const fetchUser = async (email) => {
 };
 
 const generateLoginToken = async (user) => {
-  const token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY);
+  const token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
   user.tokens = user.tokens.concat({ token });
 

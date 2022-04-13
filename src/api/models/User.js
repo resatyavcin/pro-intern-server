@@ -5,6 +5,14 @@ const validator = require('validator');
 
 const userSchema = new Schema(
   {
+    firstName: {
+      type: String,
+      required: true
+    },
+    lastName: {
+      type: String,
+      required: true
+    },
     role: {
       type: String,
       enum: ['ADMIN', 'STUDENT'],
@@ -36,10 +44,12 @@ const userSchema = new Schema(
     },
     departmentCode: {
       type: String,
-      enum: ['ME', 'EE', 'CE', 'FE']
+      enum: ['ME', 'EE', 'CE', 'FE'],
+      optional: true
     },
     grade: {
-      type: Number
+      type: Number,
+      optional: true
     },
     rightOfEntry: {
       type: Number,
@@ -55,6 +65,10 @@ const userSchema = new Schema(
       type: Boolean,
       required: true,
       default: false
+    },
+    schoolNumber: {
+      type: String,
+      optional: true
     },
     isTrash: {
       type: Boolean,

@@ -7,6 +7,16 @@ const File = require('../models/File');
 //ENDPOINTS
 /* ----------------------------------------------------------- */
 
+const fetchAllIntern = async (req, res) => {
+  try {
+    const student = await User.findOne({ _id: req.user._id }).populate('interns');
+
+    res.status(200).send(student.interns);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 //Endpoints to be made by the student
 //Student applies
 //STATUS - 1 -OK
@@ -52,6 +62,8 @@ const internshipApplication = async (req, res) => {
 //STATUS - 2 -OK
 const uploadApplicationFile = async (req, res) => {
   const file = req.file;
+
+  console.log('file');
 
   const stundentInternsCount = req.user.interns.length;
 
@@ -203,5 +215,6 @@ module.exports = {
   uploadApplicationFile,
   uploadCompletionFiles,
   confirmApplicationFile,
-  confirmCompletionFiles
+  confirmCompletionFiles,
+  fetchAllIntern
 };

@@ -69,7 +69,7 @@ const login = async (req, res) => {
 
     const token = await generateLoginToken(user);
 
-    return res.status(200).send({ token });
+    return res.status(200).send({ token, user });
   } catch (err) {
     return res.status(500).send(err);
   }

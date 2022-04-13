@@ -5,18 +5,20 @@ const {
   uploadApplicationFile,
   uploadCompletionFiles,
   confirmApplicationFile,
-  confirmCompletionFiles
+  confirmCompletionFiles,
+  fetchAllIntern
 } = require('../controllers/internController');
 
 //middleware import
 const permission = require('../middlewares/permission');
 const upload = require('../middlewares/upload');
 
+router.get('/fetch-all-interns', permission(['STUDENT']), fetchAllIntern);
 router.post('/application', permission(['STUDENT']), internshipApplication);
 router.post(
   '/upload/application-file',
   permission(['STUDENT']),
-  upload.single('application-file'),
+  upload.single('applicationFile'),
   uploadApplicationFile
 );
 router.post('/confirm/application-file/:file_id', permission(['ADMIN']), confirmApplicationFile);
