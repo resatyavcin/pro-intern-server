@@ -3,25 +3,18 @@ const Schema = mongoose.Schema;
 
 const fileSchema = new Schema(
   {
-    filePath: {
-      type: String,
-      required: true
+    companySignaturePath: {
+      type: String
     },
-    approve: {
-      type: Boolean,
-      default: false
+    adminSignaturePath: {
+      type: String
     },
-    companySignature: {
-      type: Boolean,
-      default: false
+    studentSignaturePath: {
+      type: String
     },
     approver: {
       type: Schema.Types.ObjectId,
       ref: 'User'
-    },
-    isTrash: {
-      type: Boolean,
-      default: false
     },
     intern: {
       type: Schema.Types.ObjectId,

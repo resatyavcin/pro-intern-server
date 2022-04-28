@@ -4,11 +4,62 @@ const Schema = mongoose.Schema;
 const internSchema = new Schema(
   {
     student: { type: Schema.Types.ObjectId, ref: 'User' },
+    internshipPeriod: {
+      type: String,
+      enum: ['Sömestr', 'Yaz'],
+      required: true
+    },
     startDate: {
-      type: Date
+      type: Date,
+      required: true
     },
     endDate: {
-      type: Date
+      type: Date,
+      required: true
+    },
+    companyName: {
+      type: String,
+      required: true
+    },
+    companyAdress: {
+      type: String,
+      required: true
+    },
+    companyActivityArea: {
+      type: String,
+      required: true
+    },
+    companyTotalNumberOfEmployees: {
+      type: String,
+      required: true
+    },
+    companyPhone: {
+      type: String,
+      required: true
+    },
+    companyFax: {
+      type: String,
+      required: true
+    },
+    companyEmail: {
+      type: String,
+      required: true
+    },
+    officialNameSurname: {
+      type: String,
+      required: true
+    },
+    officialMissionArea: {
+      type: String,
+      required: true
+    },
+    officialPhone: {
+      type: String,
+      required: true
+    },
+    officialEmail: {
+      type: String,
+      required: true
     },
     status: {
       type: String,

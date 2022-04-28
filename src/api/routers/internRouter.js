@@ -2,34 +2,27 @@ const express = require('express');
 const router = express.Router();
 const {
   internshipApplication,
-  uploadApplicationFile,
-  uploadCompletionFiles,
-  confirmApplicationFile,
-  confirmCompletionFiles,
-  fetchAllIntern
+  fetchAllIntern,
+  createSignatureFileForApplicationDoc,
+  fetchInternById
 } = require('../controllers/internController');
 
 //middleware import
 const permission = require('../middlewares/permission');
 const upload = require('../middlewares/upload');
 
-router.get('/fetch-all-interns', permission(['STUDENT']), fetchAllIntern);
+router.get('/fetch-all-interns', permission(['STUDENT', 'ADMIN']), fetchAllIntern);
+router.get('/fetch-intern/:intern_id', permission(['STUDENT']), fetchInternById);
+
 router.post('/application', permission(['STUDENT']), internshipApplication);
-router.post(
-  '/upload/application-file',
-  permission(['STUDENT']),
-  upload.single('applicationFile'),
-  uploadApplicationFile
-);
-router.post('/confirm/application-file/:file_id', permission(['ADMIN']), confirmApplicationFile);
+//create STS-1
 
 router.post(
-  '/upload/completion-file',
+  '/create-signature-file',
   permission(['STUDENT']),
-  upload.array('completion-files', 2),
-  uploadCompletionFiles
+  upload.single('new-signature-file'),
+  createSignatureFileForApplicationDoc
 );
-
-router.post('/confirm/completion-file', permission(['ADMIN']), confirmCompletionFiles);
+//update STS-2
 
 module.exports = router;
