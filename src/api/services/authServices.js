@@ -23,10 +23,6 @@ const fetchUser = async (email) => {
 const generateLoginToken = async (user) => {
   const token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
-  user.tokens = user.tokens.concat({ token });
-
-  await user.save();
-
   return token;
 };
 
@@ -47,7 +43,7 @@ const decreaseTheRightOfEntry = async (user) => {
   }
 
   if (user.rightOfEntry !== 0) {
-    await User.findOneAndUpdate({ id: user.id }, { $inc: { rightOfEntry: -1 } });
+    await User.findOneAndUpdate({ _id: user._id }, { $inc: { rightOfEntry: -1 } });
   }
 };
 

@@ -67,6 +67,23 @@ const internSchema = new Schema(
       required: true,
       default: 'STS-1'
     },
+    signature: [
+      {
+        fileId: {
+          type: String
+        },
+        signatureInfo: [
+          {
+            signatureBy: {
+              type: Schema.Types.ObjectId
+            },
+            signaturePage: {
+              type: [Number]
+            }
+          }
+        ]
+      }
+    ],
     completed: {
       type: Boolean,
       required: true,

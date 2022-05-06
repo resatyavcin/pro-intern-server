@@ -3,9 +3,6 @@ const User = require('../models/User');
 
 const verifyAccount = async (req, res, next) => {
   const token = req.query.token;
-
-  console.log(req);
-
   const decoded = jwt.verify(token, process.env.VERIFY_ACCOUNT_KEY);
 
   const decodedUser = decoded.user;

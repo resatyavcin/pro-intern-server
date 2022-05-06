@@ -80,17 +80,12 @@ const userSchema = new Schema(
       ref: 'Intern',
       default: undefined
     },
+    signature: {
+      type: String
+    },
     remainingIntern: {
       type: Number
-    },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true
-        }
-      }
-    ]
+    }
   },
   { timestamps: true }
 );

@@ -1,8 +1,6 @@
 //import Models
 const Intern = require('../models/Intern');
 const User = require('../models/User');
-const File = require('../models/File');
-
 /* ----------------------------------------------------------- */
 //ENDPOINTS
 /* ----------------------------------------------------------- */
@@ -30,7 +28,26 @@ const fetchInternById = async (req, res) => {
   }
 };
 
-//STATUS-1 Öğrenci başvuru yaptı genel olarak tüm bilgiler tamamlnır.
+const createSignature = async (req, res) => {
+  const { path } = req.body;
+
+  try {
+    const fetchedUser = await User.dinfONe({ id: req.user._id });
+
+    if (fetchedUser.signature) {
+      return res.status(500).send('Zaten bir imza var');
+    }
+
+    fetchedUser.signature = path;
+    await fetchedUser.save();
+
+    return res.status(200).send('Başarı ile imza oluşturuldu.');
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+};
+
+//STATUS-1 ---> Öğrenci başvurusunun yapıldığı endpoint.
 const internshipApplication = async (req, res) => {
   try {
     const form = req.body;
@@ -46,8 +63,6 @@ const internshipApplication = async (req, res) => {
       student: req.user._id,
       ...newInternForm
     });
-
-    console.log(intern);
 
     const student = await User.findOne({ _id: req.user._id }).populate('interns');
 
@@ -76,22 +91,55 @@ const internshipApplication = async (req, res) => {
   }
 };
 
-const createSignatureFileForApplicationDoc = async (req, res) => {
-  const { path } = req.body;
-
-  const stundentInternsCount = req.user.interns.length;
+const signatureFile = async (req, res) => {
+  const { fileID, page, internID } = req.body;
 
   try {
-    const signatureFile = new File({
-      studentSignaturePath: path,
-      intern: req.user.interns[stundentInternsCount - 1]
-    });
+    const fechedIntern = await Intern.findOne({ id: internID });
 
-    await signatureFile.save();
+    const findFile = await fechedIntern.signature.filter((item) => item.fileId === fileID);
 
-    await Intern.findOneAndUpdate({ id: req.user.interns[stundentInternsCount - 1] }, { status: 'STS-2' });
+    if (!findFile[0]) {
+      await Intern.findOneAndUpdate(
+        { id: req.user.interns[stundentInternsCount - 1] },
+        {
+          $push: {
+            signature: {
+              fileId: fileID,
+              signatureInfo: {
+                signatureBy: req.user.id,
+                signaturePage: page
+              }
+            }
+          }
+        }
+      );
 
-    res.status(200).send('Öğrenci tarafından başarı ile imzalandı');
+      return res.status(200).send(`${req.user.firstName} tarafından imzalandı`);
+    } else {
+      const findUser = await findFile[0].signatureInfo.filter((item) => {
+        if (item.signatureBy.toString() === req.user.id) {
+          return item;
+        }
+      });
+
+      if (findUser.length === 0) {
+        findFile[0].signatureInfo.push({
+          signatureBy: req.user.id,
+          signaturePage: page
+        });
+      } else {
+        if (await findUser[0].signaturePage.includes(page)) {
+          return res.status(500).send('Bu sayfa zaten bu kullanıcı tarafından imzalanmıştır.');
+        } else {
+          findUser[0].signaturePage = [...findUser[0].signaturePage, page];
+        }
+      }
+    }
+
+    await fechedIntern.save();
+
+    return res.status(200).send(`${req.user.firstName} tarafından ${page}. sayfa imzalandı`);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -101,5 +149,6 @@ module.exports = {
   internshipApplication,
   fetchAllIntern,
   fetchInternById,
-  createSignatureFileForApplicationDoc
+  createSignature,
+  signatureFile
 };

@@ -23,6 +23,7 @@ const { passwordHashFunction, passwordCompare } = require('../utils/hash');
 const register = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log(req.body);
   try {
     const isExist = await User.findOne({ email });
 
@@ -31,7 +32,7 @@ const register = async (req, res) => {
     }
 
     const newPassword = await passwordHashFunction(password);
-    const newUser = new User({ ...req.body, password: newPassword });
+    const newUser = new User({ ...req.body, role: 'STUDENT', password: newPassword });
 
     const token = await generateVerifyToken({ ...req.body });
 
@@ -45,7 +46,7 @@ const register = async (req, res) => {
 
     return res.status(201).send('RESPONSE.SUCCESS');
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).send('RESPONSE.SERVER_ERR');
   }
 };
 
@@ -61,7 +62,9 @@ const login = async (req, res) => {
       return res.status(500).send('RESPONSE.USER_NOT_FOUND');
     }
 
-    if (!(await passwordCompare(password, user.password))) {
+    const isMatch = await passwordCompare(password, user.password);
+
+    if (!isMatch) {
       await decreaseTheRightOfEntry(user);
 
       return res.status(500).send('RESPONSE.USER_OR_PASS_WRONG');
@@ -71,7 +74,7 @@ const login = async (req, res) => {
 
     return res.status(200).send({ token, user });
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).send('RESPONSE.SERVER_ERR');
   }
 };
 
