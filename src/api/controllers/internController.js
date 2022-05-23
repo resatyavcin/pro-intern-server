@@ -32,7 +32,7 @@ const createSignature = async (req, res) => {
   const { path } = req.body;
 
   try {
-    const fetchedUser = await User.dinfONe({ id: req.user._id });
+    const fetchedUser = await User.findOne({ _id: req.user._id });
 
     if (fetchedUser.signature) {
       return res.status(500).send('Zaten bir imza var');
@@ -47,7 +47,6 @@ const createSignature = async (req, res) => {
   }
 };
 
-//STATUS-1 ---> Öğrenci başvurusunun yapıldığı endpoint.
 const internshipApplication = async (req, res) => {
   try {
     const form = req.body;
@@ -95,13 +94,19 @@ const signatureFile = async (req, res) => {
   const { fileID, page, internID } = req.body;
 
   try {
+    const user = await User.findOne({ _id: req.user.id });
+
+    if (user.signature === undefined) {
+      return res.status(500).send('Kayıtlı imzanız bulunmamaktadır.');
+    }
+
     const fechedIntern = await Intern.findOne({ id: internID });
 
     const findFile = await fechedIntern.signature.filter((item) => item.fileId === fileID);
 
     if (!findFile[0]) {
       await Intern.findOneAndUpdate(
-        { id: req.user.interns[stundentInternsCount - 1] },
+        { id: internID },
         {
           $push: {
             signature: {
@@ -145,10 +150,43 @@ const signatureFile = async (req, res) => {
   }
 };
 
+const commitSignatureToFile = async (req, res) => {
+  const { internID, fileID, page } = req.body;
+
+  try {
+    const fechedIntern = await Intern.findOne({ id: internID });
+
+    const findFile = await fechedIntern.signature.filter((item) => item.fileId === fileID);
+
+    let signaturesArr = [];
+
+    if (findFile.length > 0) {
+      for (let i = 0; i < findFile[0].signatureInfo.length; i++) {
+        for (let j = 0; j < findFile[0].signatureInfo[i].signaturePage.length; j++) {
+          const isExist = findFile[0].signatureInfo[i].signaturePage[j];
+
+          if (isExist.toString() == page) {
+            const user = await User.findOne({ _id: findFile[0].signatureInfo[i].signatureBy });
+            const signature = user.signature;
+            const role = user.role;
+
+            signaturesArr.push({ userRole: role, signature });
+          }
+        }
+      }
+    }
+
+    return res.status(200).send(signaturesArr);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 module.exports = {
   internshipApplication,
   fetchAllIntern,
   fetchInternById,
   createSignature,
-  signatureFile
+  signatureFile,
+  commitSignatureToFile
 };
