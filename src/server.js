@@ -7,8 +7,8 @@ require('dotenv').config('../.env');
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
-require('../config/cors')(app);
 require('../config/prod')(app);
 require('../config/db')();
 
@@ -26,6 +26,7 @@ const permission = require('../src/api/middlewares/permission');
 // Passport config
 require('./api/middlewares/passport')(passport);
 // Use Middlewares
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
