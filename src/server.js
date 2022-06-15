@@ -30,6 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
+app.get('/', (req, res) => res.send('Hello Express!'));
+
 // Use Routes
 app.use('/api/auth', authRouter);
 app.use('/api/student', passport.authenticate('jwt', { session: false }), permission(['ADMIN']), studentRouter);
